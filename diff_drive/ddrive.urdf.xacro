@@ -1,0 +1,102 @@
+<?xml version = "1.0"?>
+<robot name="Diff Drive" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:property name="robot_params" value = "$(find diff_drive)/config/robot_params.yaml" />
+<xacro:property name="params" value = '${load_yaml (robot_params)}'/>
+<xacro:property name="X" value="${params['base_x']}"/>
+<xacro:property name="Y" value="${params['base_y']}"/>
+<xacro:property name="Z" value="${params['base_z']}"/>
+<xacro:property name="base_m" value="${params['base_mass']}"/>
+<xacro:property name="r" value="${params['wheel_r']}"/>
+<xacro:property name="l" value="${params['wheel_l']}"/>
+<xacro:property name="wheel_m" value="${params['wheel_mass']}"/>
+
+<link name="body">
+    <inertial>
+     <origin xyz="0 0 0" rpy="0 0 0"/>
+     <mass value="${base_m}"/>
+     <inertia ixx="1"  ixy="1"  ixz="1" iyy="1" iyz="1" izz="1" />
+    </inertial>
+  
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <geometry>
+     <box size="${X} ${Y} ${Z}" />
+    </geometry>
+    <material name="green_mat">
+      <color rgba="0 1 0 1" />
+    </material>
+  </visual>
+  
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+   <geometry>
+     <box size="${X} ${Y} ${Z}"/>
+   </geometry>
+  </collision>
+</link>
+
+<joint name="joint1" type="continuous">
+  <parent link="body" />
+  <child link="caster1" />
+  <axis xyz = "0 0 1" />
+  <origin xyz="0 0 ${Z/2}" rpy="0 0 0" />  
+</joint>
+
+<link name="caster1">
+  <visual>
+   <inertial>
+     <origin xyz="0 0 ${l/2}" rpy="0 0 0"/>
+     <mass value="${wheel_m}"/>
+     <inertia ixx="1"  ixy="1"  ixz="1" iyy="1" iyz="1" izz="1" />
+   </inertial>
+
+   <origin xyz="0 0 ${l/2}" rpy="0 0 0" />
+   <geometry>
+     <cylinder radius="${r}" length="${l}" />
+   </geometry>
+     <material name="cyan_mat">
+         <color rgba="0 1 1 1" />
+     </material>
+  </visual>
+
+  <collision>
+     origin xyz="0 0 ${l/2}" rpy="0 0 0" />
+   <geometry>
+     <cylinder radius="${r}" length="${l}" />
+   </geometry>
+  </collision>
+</link>
+
+<joint name="joint2" type="continuous">
+  <parent link="body" />
+  <child link="caster2" />
+  <axis xyz = "0 0 1" />
+  <origin xyz="0 0 ${-1*Z/2}" rpy="0 0 0" />   
+</joint>
+
+<link name="caster2">
+  <visual>
+   <inertial>
+     <origin xyz=" 0 0 ${-1*l/2}" rpy="0 0 0"/>
+     <mass value="${wheel_m}"/>
+     <inertia ixx="1"  ixy="1"  ixz="1" iyy="1" iyz="1" izz="1" />
+   </inertial>
+
+   <origin xyz=" 0 0 ${-1*l/2}" rpy="0 0 0"/>
+   <geometry>
+     <cylinder radius="${r}" length="${l}" />
+   </geometry>
+     <material name="cyan_mat">
+         <color rgba="0 1 1 1" />
+     </material>
+  </visual>
+
+  <collision>
+     <origin xyz=" 0 0 ${-1*l/2}" rpy="0 0 0"/>
+   <geometry>
+    <cylinder radius="${r}" length="${l}" />
+   </geometry>
+  </collision>
+</link>
+</robot>
