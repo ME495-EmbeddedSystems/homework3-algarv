@@ -1,0 +1,12 @@
+<launch>
+    <arg name="paused" default="true"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find diff_drive)/world/ddrive.world" />
+        <arg name="paused" value="$(arg paused)"/>
+    </include>
+
+    <param name="robot_description" command="$(find xacro)/xacro $(find diff_drive)/ddrive.urdf.xacro"/>
+    <rosparam command="load" file="$(find diff_drive)/config/robot_params.yaml"/>
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model ddrive -x 0 -y 0 -z 0" />
+</launch>

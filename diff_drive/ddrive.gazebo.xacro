@@ -1,0 +1,15 @@
+<robot name="Diff Drive" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <gazebo reference="body">
+        <material> material Gazebo/TurquoiseGlow </material>
+    </gazebo>
+
+    <gazebo reference="right_wheel">
+        <material> material Gazebo/LightBlueLaser </material>
+    </gazebo>
+
+    <gazebo reference="left_wheel">
+        <material>material Gazebo/Bricks </material>
+    </gazebo>
+
+</robot>

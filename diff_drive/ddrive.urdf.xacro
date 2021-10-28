@@ -1,5 +1,6 @@
 <?xml version = "1.0"?>
 <robot name="Diff Drive" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<xacro:include filename="ddrive.gazebo.xacro"/> 
 
 <xacro:property name="robot_params" value = "$(find diff_drive)/config/robot_params.yaml" />
 <xacro:property name="params" value = '${load_yaml (robot_params)}'/>
@@ -10,6 +11,26 @@
 <xacro:property name="r" value="${params['wheel_r']}"/>
 <xacro:property name="l" value="${params['wheel_l']}"/>
 <xacro:property name="wheel_m" value="${params['wheel_mass']}"/>
+
+<link name="base">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1"/>
+        <geometry>
+            <box size=".001 .001 .001" />
+        </geometry>
+        <material name="trans_mat">
+            <color rgba="0 0 0 0" />
+        </material>
+    </visual>
+</link>
+
+<joint name="fixed" type="fixed">
+  <parent link="base" />
+  <child link="body" />
+  <axis xyz = "0 0 1" />
+  <origin xyz="0 0 0" rpy="0 0 0" />  
+</joint>
 
 <link name="body">
     <inertial>
@@ -38,12 +59,12 @@
 
 <joint name="joint1" type="continuous">
   <parent link="body" />
-  <child link="caster1" />
+  <child link="right_wheel" />
   <axis xyz = "0 0 1" />
-  <origin xyz="0 0 ${Z/2}" rpy="0 0 0" />  
+  <origin xyz="0 ${Y/2} ${Z/2}" rpy="0 0 0" />  
 </joint>
 
-<link name="caster1">
+<link name="right_wheel">
   <visual>
    <inertial>
      <origin xyz="0 0 ${l/2}" rpy="0 0 0"/>
@@ -51,7 +72,7 @@
      <inertia ixx="1"  ixy="1"  ixz="1" iyy="1" iyz="1" izz="1" />
    </inertial>
 
-   <origin xyz="0 0 ${l/2}" rpy="0 0 0" />
+   <origin xyz="0 0 ${l/2}" rpy="0 0 0"/>
    <geometry>
      <cylinder radius="${r}" length="${l}" />
    </geometry>
@@ -61,7 +82,7 @@
   </visual>
 
   <collision>
-     origin xyz="0 0 ${l/2}" rpy="0 0 0" />
+    <origin xyz="0 0 ${l/2}" rpy="0 0 0"/>
    <geometry>
      <cylinder radius="${r}" length="${l}" />
    </geometry>
@@ -70,12 +91,12 @@
 
 <joint name="joint2" type="continuous">
   <parent link="body" />
-  <child link="caster2" />
+  <child link="left_wheel" />
   <axis xyz = "0 0 1" />
-  <origin xyz="0 0 ${-1*Z/2}" rpy="0 0 0" />   
+  <origin xyz="0 ${Y/2} ${-Z/2}" rpy="0 0 0" />   
 </joint>
 
-<link name="caster2">
+<link name="left_wheel">
   <visual>
    <inertial>
      <origin xyz=" 0 0 ${-1*l/2}" rpy="0 0 0"/>

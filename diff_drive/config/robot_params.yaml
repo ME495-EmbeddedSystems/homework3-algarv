@@ -1,7 +1,7 @@
 base_x: .25
-base_y: .25
-base_z: .5
+base_y: .75
+base_z: .25
 base_mass: 1
-wheel_r: .5
+wheel_r: .25
 wheel_l: .05
 wheel_mass: 1
