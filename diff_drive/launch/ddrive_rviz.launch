@@ -4,4 +4,9 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
     <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
     <node name="rviz" pkg ="rviz" type="rviz" args="-d $(find diff_drive)/config/rviz_setup.rviz"/>
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model ddrive -z 0.25" />
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <!-- <arg name="default" value="$(find diff_drive)/world/ddrive.world" /> -->
+        <arg name="paused" value="true" />
+    </include>
 </launch>

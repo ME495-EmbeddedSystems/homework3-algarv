@@ -4,6 +4,7 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="Diff Drive">
+<<<<<<< HEAD
   <gazebo reference="body">
     <material> material Gazebo/TurquoiseGlow </material>
   </gazebo>
@@ -31,6 +32,8 @@
     <axis xyz="0 0 1"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
   </joint>
+=======
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
   <link name="body">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -40,7 +43,11 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
+<<<<<<< HEAD
         <box size="0.25 0.75 0.25"/>
+=======
+        <box size="0.25 0.25 0.5"/>
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
       </geometry>
       <material name="green_mat">
         <color rgba="0 1 0 1"/>
@@ -49,7 +56,11 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
+<<<<<<< HEAD
         <box size="0.25 0.75 0.25"/>
+=======
+        <box size="0.25 0.25 0.5"/>
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
       </geometry>
     </collision>
   </link>
@@ -57,7 +68,11 @@
     <parent link="body"/>
     <child link="right_wheel"/>
     <axis xyz="0 0 1"/>
+<<<<<<< HEAD
     <origin rpy="0 0 0" xyz="0 0.375 0.125"/>
+=======
+    <origin rpy="0 0 0" xyz="0 0 0.25"/>
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
   </joint>
   <link name="right_wheel">
     <visual>
@@ -68,16 +83,28 @@
       </inertial>
       <origin rpy="0 0 0" xyz="0 0 0.025"/>
       <geometry>
+<<<<<<< HEAD
         <cylinder length="0.05" radius="0.25"/>
+=======
+        <cylinder length="0.05" radius="0.5"/>
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
       </geometry>
       <material name="cyan_mat">
         <color rgba="0 1 1 1"/>
       </material>
     </visual>
     <collision>
+<<<<<<< HEAD
       <origin rpy="0 0 0" xyz="0 0 0.025"/>
       <geometry>
         <cylinder length="0.05" radius="0.25"/>
+=======
+      
+     origin xyz=&quot;0 0 0.025&quot; rpy=&quot;0 0 0&quot; /&gt;
+   
+      <geometry>
+        <cylinder length="0.05" radius="0.5"/>
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
       </geometry>
     </collision>
   </link>
@@ -85,7 +112,11 @@
     <parent link="body"/>
     <child link="left_wheel"/>
     <axis xyz="0 0 1"/>
+<<<<<<< HEAD
     <origin rpy="0 0 0" xyz="0 0.375 -0.125"/>
+=======
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
   </joint>
   <link name="left_wheel">
     <visual>
@@ -96,7 +127,11 @@
       </inertial>
       <origin rpy="0 0 0" xyz=" 0 0 -0.025"/>
       <geometry>
+<<<<<<< HEAD
         <cylinder length="0.05" radius="0.25"/>
+=======
+        <cylinder length="0.05" radius="0.5"/>
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
       </geometry>
       <material name="cyan_mat">
         <color rgba="0 1 1 1"/>
@@ -105,7 +140,11 @@
     <collision>
       <origin rpy="0 0 0" xyz=" 0 0 -0.025"/>
       <geometry>
+<<<<<<< HEAD
         <cylinder length="0.05" radius="0.25"/>
+=======
+        <cylinder length="0.05" radius="0.5"/>
+>>>>>>> a123a671f85291762f57a5dd313bdd6118f5bffe
       </geometry>
     </collision>
   </link>
