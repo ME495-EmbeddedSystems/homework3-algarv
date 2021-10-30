@@ -1,6 +1,6 @@
-base_x: .25
+base_x: .5
 base_y: .75
-base_z: .25
+base_z: .125
 base_mass: 1
 wheel_r: .25
 wheel_l: .05

@@ -1,0 +1,83 @@
+<sdf version='1.7'>
+  <model name='Diff Drive'>
+    <link name='base'>
+      <inertial>
+        <pose>0 0 0 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>1</ixy>
+          <ixz>1</ixz>
+          <iyy>1</iyy>
+          <iyz>1</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_fixed_joint_lump__body_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>0.5 0.75 0.125</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='base_fixed_joint_lump__caster_collision_1'>
+        <pose>0 -0.375 0 0 -1.5708 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.25</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='base_fixed_joint_lump__body_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>0.5 0.75 0.125</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <name>material Gazebo/YellowGlow</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='base_fixed_joint_lump__caster_visual_1'>
+        <pose>0 -0.375 0 0 -1.5708 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.125</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <name>material Gazebo/Indigo</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <velocity_decay/>
+      <gravity>1</gravity>
+      <velocity_decay/>
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,8 @@
+<launch>
+        
+    <include file = "$(find arm_move)/launch/arm_rviz.launch"> 
+        <arg name="use_fake" value="true"/>
+    </include>
+
+    <node name="mover" pkg="arm_move" type="mover"/>
+</launch>
