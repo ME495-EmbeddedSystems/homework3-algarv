@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+import rospy
+from geometry_msgs.msg import Twist,Vector3
+
+def main():
+    pub = rospy.Publisher('diff/cmd_vel',Twist,queue_size = 10)
+    while not rospy.is_shutdown():
+
+        twist_value = Twist(Vector3(x=10,y=0,z=0),Vector3(x=0,y=0,z=0))
+
+        pub.publish(twist_value)
+
+if __name__ == '__main__':
+    rospy.init_node('mover') 
+    main()
+    rospy.spin()

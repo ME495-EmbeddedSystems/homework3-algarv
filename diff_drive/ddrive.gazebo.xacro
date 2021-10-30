@@ -51,7 +51,7 @@
         
         <odometryFrame>odom</odometryFrame>
         
-        <robotBaseFrame>base_link</robotBaseFrame>
+        <robotBaseFrame>base</robotBaseFrame>
         
         <publishWheelTF>false</publishWheelTF>
         
