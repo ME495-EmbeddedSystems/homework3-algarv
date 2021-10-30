@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+
+bool waypoints_cleared
+
+float64 box_x
+float64 box_y
+float64 box_z
+
+---
