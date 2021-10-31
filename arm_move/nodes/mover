@@ -53,22 +53,36 @@ def reset(waypoints):
     
     print("attempting to make a move")
 
-    move_group.set_named_target('Home')
-    go = move_group.go(wait="true")
-    move_group.stop()
+    # move_group.set_named_target('Home')
+    # go = move_group.go(wait="true")
+    # move_group.stop()
 
     home_pose = geometry_msgs.msg.Pose()
-    home_pose.position.x = .12466
-    home_pose.position.y = .0067167
-    home_pose.position.z = .35823
-    home_pose.orientation.x = .00756
-    home_pose.orientation.y = -.28093
-    home_pose.orientation.z = .95935
-    home_pose.orientation.w = .95935
-    move_group.set_pose_target(home_pose)
+    home_pose.position.x = .24858
+    home_pose.position.y = 0
+    home_pose.position.z = .19308
+    home_pose.orientation.x = 0
+    home_pose.orientation.y = 0
+    home_pose.orientation.z = 0
+    home_pose.orientation.w = 1
+    # move_group.set_pose_target(home_pose)
 
-    go = move_group.go(wait="true")
+    go = move_group.go(home_pose, wait="true")
     move_group.stop()
+
+    pose = geometry_msgs.msg.Pose()
+    pose.position.x = .12365
+    pose.position.y = .25237
+    pose.position.z = .24514
+    pose.orientation.x = .12963
+    pose.orientation.y = -.20787
+    pose.orientation.z = .51303
+    pose.orientation.w = .82267
+
+    go = move_group.go(pose, wait="true")
+    move_group.stop()
+
+    print("Did I move?")
 
 def Step(target):
     x = target.target_x
