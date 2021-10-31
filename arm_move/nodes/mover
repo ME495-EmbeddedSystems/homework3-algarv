@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
 import sys
+from moveit_commander import move_group
 import rospy
 import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
 from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
-from arm_move.srv import restart
+# from moveit_msgs import MoveItErrorCodes
+# from arm_move.srv import restart, step
 
 def main():
-    global robot
-    global scene
+    scene = moveit_commander.PlanningSceneInterface()
 
     moveit_commander.roscpp_initialize(sys.argv)
 
@@ -21,24 +22,6 @@ def main():
     move_group = moveit_commander.MoveGroupCommander(group_name)
     
     display_trajectory_publisher = rospy.Publisher("/move_group/display_planned_path", moveit_msgs.msg.DisplayTrajectory,queue_size=20)
-    
-    # We can get the name of the reference frame for this robot:
-    planning_frame = move_group.get_planning_frame()
-    print("============ Planning frame: %s" % planning_frame)
-
-    # We can also print the name of the end-effector link for this group:
-    eef_link = move_group.get_end_effector_link()
-    print("============ End effector link: %s" % eef_link)
-
-    # We can get a list of all the groups in the robot:
-    group_names = robot.get_group_names()
-    print("============ Available Planning Groups:", robot.get_group_names())
-
-    # Sometimes for debugging it is useful to print the entire state of the
-    # robot:
-    print("============ Printing robot state")
-    print(robot.get_current_state())
-    print("")
 
     table_pose = geometry_msgs.msg.PoseStamped()
     table_pose.header.frame_id = "world"
@@ -47,31 +30,61 @@ def main():
     table_pose.pose.orientation.w = 1.0
     scene.add_box("Table", table_pose, size=(1.22, .62, 0.05))
 
-def reset(cleared):
-    global robot
-    global scene
+def reset(waypoints):
+    scene = moveit_commander.PlanningSceneInterface()
+    group_name = "interbotix_arm"
+    move_group = moveit_commander.MoveGroupCommander(group_name)
+
     while not rospy.is_shutdown():
-        if cleared.waypoints_cleared:
+        if waypoints:
+            print("Box")
             box_pose = geometry_msgs.msg.PoseStamped()
             box_pose.header.frame_id = "world"
-            # box_pose.pose.position.x = .25
-            # box_pose.pose.position.z = .025
-            # box_pose.pose.orientation.w = 1.0
-            box_pose.pose.position.x = cleared.box_x
-            box_pose.pose.position.y = cleared.box_y
-            box_pose.pose.position.z = cleared.box_z 
+            box_pose.pose.position.x = .25
+            box_pose.pose.position.z = .025
+            box_pose.pose.orientation.w = 1.0
+            # box_pose.pose.position.x = cleared.box_x
+            # box_pose.pose.position.y = cleared.box_y
+            # box_pose.pose.position.z = cleared.box_z 
             scene.add_box("RealSense_box", box_pose, size=(0.14, 0.09, 0.05))
             break
         else:
             continue
+    
+    print("attempting to make a move")
 
+    move_group.set_named_target('Home')
+    go = move_group.go(wait="true")
+    move_group.stop()
+
+    home_pose = geometry_msgs.msg.Pose()
+    home_pose.position.x = .12466
+    home_pose.position.y = .0067167
+    home_pose.position.z = .35823
+    home_pose.orientation.x = .00756
+    home_pose.orientation.y = -.28093
+    home_pose.orientation.z = .95935
+    home_pose.orientation.w = .95935
+    move_group.set_pose_target(home_pose)
+
+    go = move_group.go(wait="true")
+    move_group.stop()
+
+def Step(target):
+    x = target.target_x
+    y = target.target_y
+    z = target.target_z
+    rx = target.target_rx
+    ry = target.target_ry
+    rz = target.target.rz
+
+    return MoveItErrorCodes
 
 if __name__ == '__main__':
     rospy.init_node('mover') 
     main()
-    rospy.service('reset',Empty,reset)
-    global robot
-    global scene
-    robot = moveit_commander.RobotCommander()
-    scene = moveit_commander.PlanningSceneInterface()
+    # rospy.service('step',step,Step)
+    #rospy.service('reset',restart,reset)
+    waypoints = rospy.get_param("/waypoints")
+    reset(waypoints)
     rospy.spin()

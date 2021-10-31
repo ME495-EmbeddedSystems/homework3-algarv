@@ -1,0 +1,8 @@
+float64 target_x
+float64 targey_y
+float64 target_z
+float64 target_rx
+float64 target_ry
+float64 target_rz
+---
+int32 MoveItErrorCode

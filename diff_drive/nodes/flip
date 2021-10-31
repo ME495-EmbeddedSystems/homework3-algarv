@@ -6,9 +6,17 @@ def main():
     pub = rospy.Publisher('diff/cmd_vel',Twist,queue_size = 10)
     while not rospy.is_shutdown():
 
-        twist_value = Twist(Vector3(x=10,y=0,z=0),Vector3(x=0,y=0,z=0))
+        twist_value = Twist(Vector3(x=1,y=0,z=0),Vector3(x=0,y=0,z=0))
 
         pub.publish(twist_value)
+
+        rospy.sleep(5)
+
+        twist_value = Twist(Vector3(x=-2,y=0,z=0),Vector3(x=0,y=0,z=0))
+
+        pub.publish(twist_value)
+
+        rospy.sleep(3)
 
 if __name__ == '__main__':
     rospy.init_node('mover') 
