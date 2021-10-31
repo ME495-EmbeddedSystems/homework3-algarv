@@ -8,6 +8,7 @@
 <xacro:property name="Y" value="${params['base_y']}"/>
 <xacro:property name="Z" value="${params['base_z']}"/>
 <xacro:property name="base_m" value="${params['base_mass']}"/>
+<xacro:property name="caster_m" value="${params['caster_mass']}"/>
 <xacro:property name="r" value="${params['wheel_r']}"/>
 <xacro:property name="l" value="${params['wheel_l']}"/>
 <xacro:property name="wheel_m" value="${params['wheel_mass']}"/>
@@ -41,13 +42,13 @@
 
 <link name="right_wheel">
    <inertial>
-     <origin xyz="0 0 ${-1*l}" rpy="0 0 0"/>
+     <origin xyz="0 0 ${-1*l/2}" rpy="0 0 0"/>
      <mass value="${wheel_m}"/>
      <inertia ixx="${(wheel_m*(3*r*r+l*l))/12}"  ixy="0"  ixz="0" iyy="${(wheel_m*(3*r*r+l*l))/12}" iyz="0" izz="${(wheel_m*r*r)/2}" />
    </inertial>
 
   <visual>
-   <origin xyz="0 0 ${-1*l}" rpy="0 0 0"/>
+   <origin xyz="0 0 ${-1*l/2}" rpy="0 0 0"/>
    <geometry>
      <cylinder radius="${r}" length="${l}" />
    </geometry>
@@ -57,7 +58,7 @@
   </visual>
 
   <collision>
-   <origin xyz="0 0 ${-1*l}" rpy="0 0 0"/>
+   <origin xyz="0 0 ${-1*l/2}" rpy="0 0 0"/>
    <geometry>
      <cylinder radius="${r}" length="${l}" />
    </geometry>
@@ -93,8 +94,8 @@
 <link name="caster">
    <inertial>
      <origin xyz=" 0 0 0" rpy="0 0 0"/>
-     <mass value="${wheel_m}"/>
-     <inertia ixx="${(wheel_m*(3*Z*Z+l*l))/12}"  ixy="0"  ixz="0" iyy="${(wheel_m*(3*Z*Z+l*l))/12}" iyz="0" izz="${(wheel_m*Z*Z)/2}" />
+     <mass value="${caster_m}"/>
+     <inertia ixx="${(caster_m*(3*Z*Z+l*l))/12}"  ixy="0"  ixz="0" iyy="${(caster_m*(3*Z*Z+l*l))/12}" iyz="0" izz="${(caster_m*Z*Z)/2}" />
    </inertial>
 
   <visual>

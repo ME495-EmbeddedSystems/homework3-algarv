@@ -2,6 +2,7 @@ base_x: .5
 base_y: .75
 base_z: .125
 base_mass: 1
+caster_mass: .1
 wheel_r: .25
-wheel_l: .05
-wheel_mass: 1
+wheel_l: .15
+wheel_mass: 5
