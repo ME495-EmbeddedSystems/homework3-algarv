@@ -1,5 +1,4 @@
-
-bool waypoints_cleared
+bool clear_waypoints
 
 float64 box_x
 float64 box_y
