@@ -75,7 +75,7 @@ class main:
 
     def step(self,target):
 
-        gripper = target.close_gripper
+        gripper = target.gripper
         target = [target.x,target.y,target.z,target.rx,target.ry,target.rz,target.rw]        
 
         print("Going to waypoint",target)
@@ -99,12 +99,19 @@ class main:
         if error_code.val == 1:
             self.waypoints.append(target)
             print(self.waypoints)
-            if gripper:
+            if gripper==1:
                 print("Closing grippers")
                 self.gripper_group.set_named_target('Closed')
                 go = self.gripper_group.go(wait="true")
                 self.gripper_group.stop()
                 self.waypoints.append([1])
+            elif gripper==0:
+                print("Opening grippers")
+                self.gripper_group.set_named_target('Open')
+                go = self.gripper_group.go(wait="true")
+                self.gripper_group.stop()
+                self.waypoints.append([0])
+                
             rospy.set_param("/waypoints",self.waypoints)
 
         return error_code.val
@@ -114,10 +121,16 @@ class main:
         
         for points in self.waypoints:
             if len(points) == 1:
-                print("Closing grippers")
-                self.gripper_group.set_named_target('Closed')
-                go = self.gripper_group.go(wait="true")
-                self.gripper_group.stop()
+                if points[0] == 1:
+                    print("Closing grippers")
+                    self.gripper_group.set_named_target('Closed')
+                    go = self.gripper_group.go(wait="true")
+                    self.gripper_group.stop()
+                elif points[0] == 0:
+                    print("Opening grippers")
+                    self.gripper_group.set_named_target('Open')
+                    go = self.gripper_group.go(wait="true")
+                    self.gripper_group.stop()
             if len(points) == 7:
                 print("Going to waypoint",points)
                 

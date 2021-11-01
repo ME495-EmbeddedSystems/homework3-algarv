@@ -5,6 +5,6 @@ float64 rx
 float64 ry
 float64 rz
 float64 rw
-bool close_gripper
+int32 gripper
 ---
 int32 MoveItErrorCode
