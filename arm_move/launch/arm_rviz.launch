@@ -27,6 +27,11 @@
     <arg name="use_trajectory_controllers"        value="true"/>
   </include>
 
+  <include if="$(arg use_moveit_rviz)" file="$(find interbotix_xsarm_moveit)/launch/moveit_rviz.launch" ns="$(arg robot_name)">
+    <arg name="rviz_frame"                        value="$(arg rviz_frame)"/>
+    <arg name="config"                            value="true"/>
+  </include>
+
   <include if="$(arg use_actual)" file="$(find interbotix_xsarm_ros_control)/launch/xsarm_ros_control.launch">
     <arg name="robot_model"                       value="$(arg robot_model)"/>
     <arg name="robot_name"                        value="$(arg robot_name)"/>
@@ -61,11 +66,6 @@
     <arg name="dof"                               value="$(arg dof)"/>
     <arg name="fake_execution"                    value="$(arg use_fake)"/>
     <arg name="publish_monitored_planning_scene"  value="true" />
-  </include>
-
-  <include if="$(arg use_moveit_rviz)" file="$(find interbotix_xsarm_moveit)/launch/moveit_rviz.launch" ns="$(arg robot_name)">
-    <arg name="rviz_frame"                        value="$(arg rviz_frame)"/>
-    <arg name="config"                            value="true"/>
   </include>
 
 </launch>

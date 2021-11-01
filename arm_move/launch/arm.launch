@@ -1,11 +1,32 @@
 <launch>
-        
-    <!-- <include file = "$(find arm_move)/launch/arm_rviz.launch"> 
+    
+    <arg name="mode" default = "rviz"/>   
+    <!-- <arg name="robot_description" default="$xacro (find interbotix_xsarm_descriptions)/urdf/px100.urdf.xacro"/> -->
+
+    <include if="$(eval arg ('mode') == 'rviz')" file = "$(find arm_move)/launch/arm_box.launch"> 
+        <arg name="use_rviz" value="true"/>
+        <arg name="use_gazebo" value="false"/>
+        <arg name="use_actual" value="false"/>
         <arg name="use_fake" value="true"/>
-    </include> -->
+        <arg name="dof" value="4"/>
+    </include>
+
+    <include if="$(eval arg ('mode') == 'gazebo')" file = "$(find arm_move)/launch/arm_box.launch"> 
+        <arg name="use_rviz" value="false"/>
+        <arg name="use_gazebo" value="true"/>
+        <arg name="use_actual" value="false"/>
+        <arg name="dof" value="4"/>
+    </include>
+
+    <include if="$(eval arg ('mode') == 'real')" file = "$(find arm_move)/launch/arm_box.launch"> 
+        <arg name="use_rviz" value="true"/>
+        <arg name="use_gazebo" value="false"/>
+        <arg name="use_actual" value="true"/>
+        <arg name="use_fake" value="false"/>
+        <arg name="dof" value="4"/>
+    </include>
 
     <rosparam command="load" file="$(find arm_move)/config/waypoints.yaml" />
-
     <node name="mover" pkg="arm_move" type="mover" ns="px100" output="screen"/>
     <remap from="/attached_collision_object" to="/px100/attached_collision_object"/>
     <remap from="/collision_object" to="/px100/collision_object"/>
