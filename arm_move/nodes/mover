@@ -9,143 +9,146 @@ import moveit_msgs.msg
 import geometry_msgs.msg
 from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
-# # from moveit_msgs import MoveItErrorCodes
-from arm_move.srv import restart, step
+from moveit_msgs.msg import MoveItErrorCodes
+from arm_move.srv import restart, step, restartResponse
+from std_srvs.srv import Empty, EmptyResponse
 
-def main():
-    scene = moveit_commander.PlanningSceneInterface()
-
-    moveit_commander.roscpp_initialize(sys.argv)
-
-    rospy.sleep(2)
+class main:
     
-    # display_trajectory_publisher = rospy.Publisher("/move_group/display_planned_path", moveit_msgs.msg.DisplayTrajectory,queue_size=20)
+    def __init__(self):
+        moveit_commander.roscpp_initialize(sys.argv)
+        self.scene = moveit_commander.PlanningSceneInterface()
+        self.robot_name = "interbotix_arm"
+        self.robot_group = moveit_commander.MoveGroupCommander(self.robot_name)
+        self.gripper_name = "interbotix_gripper"
+        self.gripper_group = moveit_commander.MoveGroupCommander(self.gripper_name)
+        self.scene = moveit_commander.PlanningSceneInterface()
 
-    table_pose = geometry_msgs.msg.PoseStamped()
-    table_pose.header.frame_id = "world"
-    table_pose.pose.position.x = .25
-    table_pose.pose.position.z = -.025
-    table_pose.pose.orientation.w = 1.0
-    scene.add_box("Table", table_pose, size=(1.22, .62, 0.05))
+        rospy.sleep(2)
+        
+        print("And for my next trick, I will make a table")
+        table_pose = geometry_msgs.msg.PoseStamped()
+        table_pose.header.frame_id = "world"
+        table_pose.pose.position.x = .25
+        table_pose.pose.position.z = -.025
+        table_pose.pose.orientation.w = 1.0
+        self.scene.add_box("Table", table_pose, size=(1.22, .62, 0.05))
+        print("ta da")
 
-def reset(cleared, box_position):
-    scene = moveit_commander.PlanningSceneInterface()
-    group_name = "interbotix_arm"
-    move_group = moveit_commander.MoveGroupCommander(group_name)
+    def reset(self, restart):
 
-    while not rospy.is_shutdown():
-        if cleared:
-            print("Spawning realsense box")
-            box_pose = geometry_msgs.msg.PoseStamped()
-            box_pose.header.frame_id = "world"
-            box_pose.pose.position.x = box_position[0]
-            box_pose.pose.position.y = box_position[1]
-            box_pose.pose.position.z = box_position[2]
-            scene.add_box("RealSense_box", box_pose, size=(0.14, 0.09, 0.05))
-            break
+        clear = restart.clear_waypoints
+        
+        if clear:
+            self.waypoints = []
+            rospy.set_param("waypoints",self.waypoints)
         else:
-            continue
-    
-    print("Going home")
+            self.waypoints = rospy.get_param("waypoints")
+        
+        print("Starting with waypoints:",self.waypoints)
 
-    move_group.set_named_target('Home')
-    go = move_group.go(wait="true")
-    move_group.stop()
+        print("Going home")
 
-    print("Did I go home?")
+        self.robot_group.set_named_target('Home')
+        go = self.robot_group.go(wait="true")
+        self.robot_group.stop()
 
-def Step(target):
-    scene = moveit_commander.PlanningSceneInterface()
-    group_name = "interbotix_arm"
-    move_group = moveit_commander.MoveGroupCommander(group_name)
+        print("Did I go home?")
 
-    print("Spawning target object")
-    box_pose = geometry_msgs.msg.PoseStamped()
-    box_pose.header.frame_id = "world"
-    box_pose.pose.position.x = target[0]
-    box_pose.pose.position.y = target[1]
-    box_pose.pose.position.z = target[2]
-    scene.add_box("Target_Object", box_pose, size=(0.025, 0.025, 0.025))
+        print("Opening grippers")
 
-def follow(waypoints,target_position):
-    group_name = "interbotix_arm"
-    move_group = moveit_commander.MoveGroupCommander(group_name)
+        self.gripper_group.set_named_target('Open')
+        go = self.gripper_group.go(wait="true")
+        self.gripper_group.stop()
 
-    group_name = "interbotix_gripper"
-    gripper_group = moveit_commander.MoveGroupCommander(group_name)
+        print("Spawning realsense box")
+        box_pose = geometry_msgs.msg.PoseStamped()
+        box_pose.header.frame_id = "world"
+        box_pose.pose.position.x = restart.box_x
+        box_pose.pose.position.y = restart.box_y
+        box_pose.pose.position.z = restart.box_z
+        self.scene.add_box("RealSense_box", box_pose, size=(0.14, 0.09, 0.05))
 
-    for points in waypoints:
-        print("Going to waypoint",points)
+        return []
+
+    def step(self,target):
+
+        gripper = target.close_gripper
+        target = [target.x,target.y,target.z,target.rx,target.ry,target.rz,target.rw]        
+
+        print("Going to waypoint",target)
         
         pose = geometry_msgs.msg.Pose()
-        pose.position.x = points[0]
-        pose.position.y = points[1]
-        pose.position.z = points[2]
-        pose.orientation.x = points[3]
-        pose.orientation.y = points[4]
-        pose.orientation.z = points[5]
-        pose.orientation.w = points[6]
+        pose.position.x = target[0]
+        pose.position.y = target[1]
+        pose.position.z = target[2]
+        pose.orientation.x = target[3]
+        pose.orientation.y = target[4]
+        pose.orientation.z = target[5]
+        pose.orientation.w = target[6]
 
-        go = move_group.go(pose, wait="true")
-        move_group.stop()
+        self.robot_group.go(pose, wait="true")
+        self.robot_group.stop()
 
         print("Did I do it?")
 
-    print("Opening grippers")
+        (success_flag, trajectory_message, planning_time, error_code) = self.robot_group.plan()
+        print(error_code.val)
+        if error_code.val == 1:
+            self.waypoints.append(target)
+            print(self.waypoints)
+            if gripper:
+                print("Closing grippers")
+                self.gripper_group.set_named_target('Closed')
+                go = self.gripper_group.go(wait="true")
+                self.gripper_group.stop()
+                self.waypoints.append([1])
+            rospy.set_param("waypoints",self.waypoints)
 
-    gripper_group.set_named_target('Open')
-    go = gripper_group.go(wait="true")
-    gripper_group.stop()
+        return error_code.val
 
-    print("Going to target",target_position)
-    
-    pose = geometry_msgs.msg.Pose()
-    pose.position.x = target_position[0]
-    pose.position.y = target_position[1]
-    pose.position.z = target_position[2]
-    pose.orientation.x = target_position[3]
-    pose.orientation.y = target_position[4]
-    pose.orientation.z = target_position[5]
-    pose.orientation.w = target_position[6]
+    def follow(self,Empty):
+        self.waypoints = rospy.get_param("/waypoints")
+        
+        for points in self.waypoints:
+            if len(points) == 1:
+                print("Closing grippers")
+                self.gripper_group.set_named_target('Closed')
+                go = self.gripper_group.go(wait="true")
+                self.gripper_group.stop()
+            if len(points) == 7:
+                print("Going to waypoint",points)
+                
+                pose = geometry_msgs.msg.Pose()
+                pose.position.x = points[0]
+                pose.position.y = points[1]
+                pose.position.z = points[2]
+                pose.orientation.x = points[3]
+                pose.orientation.y = points[4]
+                pose.orientation.z = points[5]
+                pose.orientation.w = points[6]
 
-    go = move_group.go(pose, wait="true")
-    move_group.stop()
+                go = self.robot_group.go(pose, wait="true")
+                self.robot_group.stop()
 
-    print("Are we there yet?")
+                print("Did I do it?")
 
-    print("Closing grippers")
-
-    gripper_group.set_named_target('Closed')
-    go = gripper_group.go(wait="true")
-    gripper_group.stop()
-
-    print("Going home")
-
-    move_group.set_named_target('Home')
-    go = move_group.go(wait="true")
-    move_group.stop()
-
-    print("Did I go home?")
-
-    print("Opening grippers")
-
-    gripper_group.set_named_target('Open')
-    go = gripper_group.go(wait="true")
-    gripper_group.stop()
+        return []
 
 if __name__ == '__main__':
-    rospy.init_node('mover') 
-    main()
-    # rospy.service('step',step,Step)
-
-    cleared = rospy.get_param("/cleared")
-    box_position = rospy.get_param("/box_position")
-    waypoints = rospy.get_param("/waypoints")
-    target = rospy.get_param("/target")
-    target_position = rospy.get_param("/target_position")
-
-    # reset(cleared,box_position)
-    rospy.service('reset',restart,reset)
-    Step(target)
-    follow(waypoints,target_position)
+    rospy.init_node('mover')
+    main = main()
+    rospy.Service('restart',restart,main.reset) 
+    rospy.Service('step',step,main.step)
+    rospy.Service('follow',Empty,main.follow)
     rospy.spin()
+
+
+##Spawn Target Object##
+# print("Spawning target object")
+# box_pose = geometry_msgs.msg.PoseStamped()
+# box_pose.header.frame_id = "world"
+# box_pose.pose.position.x = target[0]
+# box_pose.pose.position.y = target[1]
+# box_pose.pose.position.z = target[2]
+# self.scene.add_box("Target_Object", box_pose, size=(0.025, 0.025, 0.025))

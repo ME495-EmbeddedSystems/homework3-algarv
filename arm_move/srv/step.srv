@@ -1,8 +1,10 @@
-float64 target_x
-float64 targey_y
-float64 target_z
-float64 target_rx
-float64 target_ry
-float64 target_rz
+float64 x
+float64 y
+float64 z
+float64 rx
+float64 ry
+float64 rz
+float64 rw
+bool close_gripper
 ---
 int32 MoveItErrorCode
