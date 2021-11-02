@@ -1,8 +1,23 @@
 #!/usr/bin/env python
+
+## FLIP NODE ##
+'''
+The flip nodes sends twists to the differentially drive robot so it drives forward, flips over, then continues to drive forward in
+the opposite direction. It accomplishes this by sending equal and opposite velocities.
+
+Publishers:
+    Name: diff/cmd_vel Type: geometry_msgs/Twist ~ Sends a twist message to the diff drive robot in gazebo
+'''
+
 import rospy
 from geometry_msgs.msg import Twist,Vector3
 
 def main():
+    '''
+    Publishes twist messages to make the diff drive robot drive forward and flip over. The velocities are looped so the robot drives
+    forward for 5 seconds, then changes direction so the wheels spin with equal magnitude but opposite direction. After 3 of these
+    cycles, the robot pauses for a second help maintain control.
+    '''
     pub = rospy.Publisher('diff/cmd_vel',Twist,queue_size = 10)
     while not rospy.is_shutdown():
         x = 0

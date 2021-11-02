@@ -7,7 +7,7 @@ project(arm_move)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED rospy std_msgs message_runtime message_generation)
+find_package(catkin REQUIRED COMPONENTS message_generation message_runtime rospy std_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -99,9 +99,9 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-  LIBRARIES arm_move
-  CATKIN_DEPENDS std_msgs
+  LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS std_msgs
 )
 
 ###########

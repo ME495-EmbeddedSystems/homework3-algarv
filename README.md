@@ -23,6 +23,7 @@ The turtle may be paused with the Pause service, as resumed again with the same 
 The specifications of the robot may be adjusted in the robot_params.yaml file. The dimensions and mass of the body and wheels are controlled through parameters in this file. 
 
 ![DDrive Gif](ddrive.gif)
+
 Longer Video: https://youtu.be/OywEfLBxLX4
 
 

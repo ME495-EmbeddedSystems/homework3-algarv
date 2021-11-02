@@ -1,5 +1,26 @@
 #!/usr/bin/env python
 
+## MOVER NODE ##
+'''
+The mover node connects to the interbotix arm and adds a table to the planning scene. It sets up the restart, step, and follow services
+to be called by the user in the command line. 
+
+Custom Services:
+    Name: px100/restart Type: arm_move/restart ~ Takes an argument to either set waypoints to an empty list or use the existing 
+        parameter values. Moves the arm to its home position, and spawns a box at the coordinates specified in the argument.
+
+    Name: px100/step Type: arm_move/step ~ Attempts to plan a path for the arm's end effector to move to the position given in the
+        argument. If the path is successful, the robot moves to the position and the waypoints is added to the parameter. Returns 
+        the MoveIt error code value.
+    
+    Name: px100/follow Type: std_srvs/Empty ~ Loads the waypoints from the parameter server and follows the path set with the step service.
+
+Parameters: 
+    Name: /waypoints ~ Waypoint coordinates and gripper commands
+
+'''
+
+
 from re import T
 import sys
 from moveit_commander import move_group
@@ -16,6 +37,10 @@ from std_srvs.srv import Empty, EmptyResponse
 class main:
     
     def __init__(self):
+        '''
+        Initialize the python API for the moveit_commander and creates the planning scene. Set up move groups for the whole robot 
+        and its end effector, and spawns a collision object to represent the table in the planning scene. 
+        '''
         moveit_commander.roscpp_initialize(sys.argv)
         self.scene = moveit_commander.PlanningSceneInterface()
         self.robot_name = "interbotix_arm"
@@ -36,6 +61,11 @@ class main:
         print("ta da")
 
     def reset(self, restart):
+        '''
+        If the service call sets clear_waypoints to true, set waypoints to an empty list and update the paramter server. Otherwise,
+        Pull waypoints from the parameter server. Set the robot to the home position and open the grippers. Spawn the collision
+        object representing the realsense box using the coordinates from the service call. Empty return. 
+        '''
 
         clear = restart.clear_waypoints
         
@@ -46,8 +76,7 @@ class main:
         else:
             self.waypoints = rospy.get_param("/waypoints")
         
-        print(rospy.get_param("/waypoints"))
-        print("Starting with waypoints:",self.waypoints)
+        print("Starting with waypoints:",rospy.get_param("/waypoints"))
 
         print("Going home")
 
@@ -74,7 +103,13 @@ class main:
         return []
 
     def step(self,target):
-
+        '''
+        Takes the service call arguments to send a target pose to the robot. Pulls the resulting error code. If the execution
+        was successful, adds the 7-element list of the position and orientation to the waypoints lists and updates the parameter. 
+        Checks the service call argument and opens the grippers if 0 was given, closes the grippers if 1 was given, or sends no
+        gripper commands if any other value was set. Appends the gripper command, if applicable, to the waypoints list and
+        updates the parameter. Returns the error code.
+        '''
         gripper = target.gripper
         target = [target.x,target.y,target.z,target.rx,target.ry,target.rz,target.rw]        
 
@@ -117,6 +152,11 @@ class main:
         return error_code.val
 
     def follow(self,Empty):
+        '''
+        Essentially plays back all the step service calls. Reads waypoints from the parameter server, and iterates through each element.
+        Each element is a list with either 1 number, corresponding to a gripper command, or 7 numbers, corresponding to a target position
+        and either the gripper move group or robot group recieves a command corresponding to the list values. No inputs, no returns.
+        '''
         self.waypoints = rospy.get_param("/waypoints")
         
         for points in self.waypoints:

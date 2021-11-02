@@ -8,6 +8,8 @@ from arm_move.srv import restart, step
 class TestCase(unittest.TestCase):
     def __init__(self,*args):
         super(TestCase,self).__init__(*args)
+        rospy.wait_for_service('restart')
+        rospy.wait_for_service('step')
         self.restart = rospy.ServiceProxy('restart',restart)
         self.step = rospy.ServiceProxy('step',step)
 
