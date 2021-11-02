@@ -26,8 +26,9 @@
     </include>
 
     <rosparam command="load" file="$(find arm_move)/config/waypoints.yaml" />
-    <node name="mover" pkg="arm_move" type="mover" ns="px100" output="screen"/>
-    <remap from="/attached_collision_object" to="/px100/attached_collision_object"/>
-    <remap from="/collision_object" to="/px100/collision_object"/>
+    <node name="mover" pkg="arm_move" type="mover" ns="px100" output="screen">
+        <remap from="/attached_collision_object" to="/px100/attached_collision_object"/>
+        <remap from="/collision_object" to="/px100/collision_object"/>
+    </node>
 
 </launch>

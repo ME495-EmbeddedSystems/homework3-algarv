@@ -157,14 +157,3 @@ if __name__ == '__main__':
     rospy.Service('step',step,main.step)
     rospy.Service('follow',Empty,main.follow)
     rospy.spin()
-
-
-
-##Spawn Target Object##
-# print("Spawning target object")
-# box_pose = geometry_msgs.msg.PoseStamped()
-# box_pose.header.frame_id = "world"
-# box_pose.pose.position.x = target[0]
-# box_pose.pose.position.y = target[1]
-# box_pose.pose.position.z = target[2]
-# self.scene.add_box("Target_Object", box_pose, size=(0.025, 0.025, 0.025))
