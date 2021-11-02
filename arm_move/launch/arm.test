@@ -1,0 +1,9 @@
+<launch>
+
+    <include file = "$(find arm_move)/launch/arm.launch">
+        <arg name="mode" value="rviz"/>
+    </include>
+
+    <test test-name="arm_test" pkg="arm_move" type="arm_test"/>
+
+</launch>

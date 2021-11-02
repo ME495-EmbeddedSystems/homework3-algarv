@@ -1,7 +1,6 @@
 <launch>
     
     <arg name="mode" default = "rviz"/>   
-    <!-- <arg name="robot_description" default="$xacro (find interbotix_xsarm_descriptions)/urdf/px100.urdf.xacro"/> -->
 
     <include if="$(eval arg ('mode') == 'rviz')" file = "$(find arm_move)/launch/arm_box.launch"> 
         <arg name="use_rviz" value="true"/>
