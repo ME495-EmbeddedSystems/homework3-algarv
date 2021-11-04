@@ -53,6 +53,7 @@ add_service_files(
    FILES
    restart.srv
    step.srv
+   follow.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -152,7 +153,7 @@ include_directories(
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
-## Mark executable scripts (Python etc.) for installation
+## Mark executable scripts (Pytint32 MoveItErrorCodehon etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
    nodes/mover

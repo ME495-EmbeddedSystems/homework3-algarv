@@ -3,25 +3,25 @@
 import unittest
 import rospy
 import rostest
-from arm_move.srv import restart, step
+from arm_move.srv import restart, step, stepResponse
 
 class TestCase(unittest.TestCase):
     def __init__(self,*args):
         super(TestCase,self).__init__(*args)
-        rospy.wait_for_service('restart')
-        rospy.wait_for_service('step')
-        self.restart = rospy.ServiceProxy('restart',restart)
-        self.step = rospy.ServiceProxy('step',step)
+        rospy.wait_for_service('/px100/restart')
+        rospy.wait_for_service('/px100/step')
+        self.restart = rospy.ServiceProxy('/px100/restart',restart)
+        self.step = rospy.ServiceProxy('/px100/step',step)
 
-        self.restart(clear_waypoints=False, box_x=0.15, box_y=0.0, box_z=0.025)
+        self.restart.call(clear_waypoints=False, box_x=0.15, box_y=0.0, box_z=0.025)
     
     def test_ground_collision(self):
-        error_code = self.step(x=0.11175, y=0.0, z=-0.1, rx=0.0, ry=0.53735, rz=0.0, w=0.84336)
-        self.assertEquals(error_code, -1)
+        error_code = self.step.call(x=0.11175, y=0.0, z=-0.1, rx=0.0, ry=0.53735, rz=0.0, rw=0.84336)
+        self.assertEquals(error_code, stepResponse(-1))
 
     def test_successful_plan(self):
-        error_code = self.step(x=.25, y=0.0, z=0.2, rx=0.0, ry=0.0, rz=0.0, w=1.0)
-        self.assertEquals(error_code, 1)
+        error_code = self.step.call(x=.25, y=0.0, z=0.2, rx=0.0, ry=0.0, rz=0.0, rw=1.0)
+        self.assertEquals(error_code, stepResponse(1))
 
 if __name__ == "__main__":
     import rostest

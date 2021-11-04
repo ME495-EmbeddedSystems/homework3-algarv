@@ -17,22 +17,14 @@ Custom Services:
 
 Parameters: 
     Name: /waypoints ~ Waypoint coordinates and gripper commands
-
+    Name: /cycle
 '''
 
-
-from re import T
 import sys
-from moveit_commander import move_group
 import rospy
 import moveit_commander
-import moveit_msgs.msg
 import geometry_msgs.msg
-from std_msgs.msg import String
-from moveit_commander.conversions import pose_to_list
-from moveit_msgs.msg import MoveItErrorCodes
-from arm_move.srv import restart, step, restartResponse
-from std_srvs.srv import Empty, EmptyResponse
+from arm_move.srv import restart, step, follow
 
 class main:
     
@@ -42,11 +34,17 @@ class main:
         and its end effector, and spawns a collision object to represent the table in the planning scene. 
         '''
         moveit_commander.roscpp_initialize(sys.argv)
+
         self.scene = moveit_commander.PlanningSceneInterface()
         self.robot_name = "interbotix_arm"
         self.robot_group = moveit_commander.MoveGroupCommander(self.robot_name)
         self.gripper_name = "interbotix_gripper"
         self.gripper_group = moveit_commander.MoveGroupCommander(self.gripper_name)
+        
+        rospy.Service('restart',restart,self.reset) 
+        rospy.Service('step',step,self.step)
+        rospy.Service('follow',follow,self.follow)
+        
         self.scene = moveit_commander.PlanningSceneInterface()
 
         rospy.sleep(2)
@@ -151,49 +149,54 @@ class main:
 
         return error_code.val
 
-    def follow(self,Empty):
+    def follow(self,cycle):
         '''
-        Essentially plays back all the step service calls. Reads waypoints from the parameter server, and iterates through each element.
-        Each element is a list with either 1 number, corresponding to a gripper command, or 7 numbers, corresponding to a target position
-        and either the gripper move group or robot group recieves a command corresponding to the list values. No inputs, no returns.
+        Essentially plays back all the step service calls. Pulls the cycle argument and sets a new private parameter to the initial value. 
+        Reads waypoints from the parameter server, and iterates through each element. After each loop, checks the private parameter. If cycle
+        is still set to true, the cycle continues. Otherwise, the service call ends. Each element is a list with either 1 number, corresponding 
+        to a gripper command, or 7 numbers, corresponding to a target position and either the gripper move group or robot group recieves a 
+        command corresponding to the list values.
         '''
         self.waypoints = rospy.get_param("/waypoints")
         
-        for points in self.waypoints:
-            if len(points) == 1:
-                if points[0] == 1:
-                    print("Closing grippers")
-                    self.gripper_group.set_named_target('Closed')
-                    go = self.gripper_group.go(wait="true")
-                    self.gripper_group.stop()
-                elif points[0] == 0:
-                    print("Opening grippers")
-                    self.gripper_group.set_named_target('Open')
-                    go = self.gripper_group.go(wait="true")
-                    self.gripper_group.stop()
-            if len(points) == 7:
-                print("Going to waypoint",points)
+        self.cycle = cycle.cycle
+        rospy.set_param('/cycle',self.cycle)
+        
+        self.keep_going = rospy.get_param('/cycle')        
+
+        while self.keep_going:
+            for points in self.waypoints:
+                if len(points) == 1:
+                    if points[0] == 1:
+                        print("Closing grippers")
+                        self.gripper_group.set_named_target('Closed')
+                        go = self.gripper_group.go(wait="true")
+                        self.gripper_group.stop()
+                    elif points[0] == 0:
+                        print("Opening grippers")
+                        self.gripper_group.set_named_target('Open')
+                        go = self.gripper_group.go(wait="true")
+                        self.gripper_group.stop()
+                if len(points) == 7:
+                    print("Going to waypoint",points)
+                    
+                    pose = geometry_msgs.msg.Pose()
+                    pose.position.x = points[0]
+                    pose.position.y = points[1]
+                    pose.position.z = points[2]
+                    pose.orientation.x = points[3]
+                    pose.orientation.y = points[4]
+                    pose.orientation.z = points[5]
+                    pose.orientation.w = points[6]
+
+                    go = self.robot_group.go(pose, wait="true")
+                    self.robot_group.stop() 
                 
-                pose = geometry_msgs.msg.Pose()
-                pose.position.x = points[0]
-                pose.position.y = points[1]
-                pose.position.z = points[2]
-                pose.orientation.x = points[3]
-                pose.orientation.y = points[4]
-                pose.orientation.z = points[5]
-                pose.orientation.w = points[6]
-
-                go = self.robot_group.go(pose, wait="true")
-                self.robot_group.stop()
-
-                print("Did I do it?")
+            self.keep_going = rospy.get_param('/cycle')         
 
         return []
 
 if __name__ == '__main__':
     rospy.init_node('mover')
     main = main()
-    rospy.Service('restart',restart,main.reset) 
-    rospy.Service('step',step,main.step)
-    rospy.Service('follow',Empty,main.follow)
     rospy.spin()
