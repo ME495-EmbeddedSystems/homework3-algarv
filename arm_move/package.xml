@@ -2,7 +2,7 @@
 <package format="2">
   <name>arm_move</name>
   <version>0.0.0</version>
-  <description>The arm_move package</description>
+  <description>The arm_move package faciliates planning a trajectory for a pincherx100 arm using MoveIt with visualization in RViz and simulation in Gazebo.</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

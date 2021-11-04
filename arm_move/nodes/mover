@@ -103,7 +103,7 @@ class main:
     def step(self,target):
         '''
         Takes the service call arguments to send a target pose to the robot. Pulls the resulting error code. If the execution
-        was successful, adds the 7-element list of the position and orientation to the waypoints lists and updates the parameter. 
+        was successful, adds the 7-element list of the position and orientation to the waypoints lists and updates the serverparameter. 
         Checks the service call argument and opens the grippers if 0 was given, closes the grippers if 1 was given, or sends no
         gripper commands if any other value was set. Appends the gripper command, if applicable, to the waypoints list and
         updates the parameter. Returns the error code.

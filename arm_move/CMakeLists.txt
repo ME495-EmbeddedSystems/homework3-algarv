@@ -51,9 +51,9 @@ find_package(catkin REQUIRED COMPONENTS message_generation message_runtime rospy
 ## Generate services in the 'srv' folder
 add_service_files(
    FILES
+   follow.srv
    restart.srv
    step.srv
-   follow.srv
 )
 
 ## Generate actions in the 'action' folder

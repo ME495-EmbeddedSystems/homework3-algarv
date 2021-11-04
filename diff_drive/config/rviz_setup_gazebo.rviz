@@ -67,6 +67,8 @@ Visualization Manager:
           Value: true
         left_wheel:
           Value: true
+        odom:
+          Value: true
         right_wheel:
           Value: true
       Marker Alpha: 1
@@ -76,14 +78,15 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base:
-          body:
-            caster:
-              {}
-            left_wheel:
-              {}
-            right_wheel:
-              {}
+        odom:
+          base:
+            body:
+              caster:
+                {}
+              left_wheel:
+                {}
+              right_wheel:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -130,7 +133,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: body
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -154,7 +157,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.837299823760986
+      Distance: 55.230899810791016
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -170,9 +173,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5453979969024658
+      Pitch: 0.8103978633880615
       Target Frame: <Fixed Frame>
-      Yaw: 3.203583002090454
+      Yaw: 1.96857750415802
     Saved: ~
 Window Geometry:
   Displays:

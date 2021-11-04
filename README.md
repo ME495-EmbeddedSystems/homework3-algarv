@@ -20,7 +20,7 @@ Longer Video: https://youtu.be/OywEfLBxLX4
 
 <h2>Part II: Motion Planning </h2>
 
-The arm_move package faciliates planning a trajectory for a pincherx100 arm using MoveIt, and either simulating the motion in Gazebo or controlling the robot in the real world. It uses three services to set the world, recieve and follow incremental waypoints, then play back the planned trajectory. 
+The arm_move package faciliates planning a trajectory for a pincherx100 arm using MoveIt with visualization in RViz and simulation in Gazebo. It uses three services to set the world, recieve and follow incremental waypoints, then play back the planned trajectory. 
 
 <h4>Restart:</h4>
     

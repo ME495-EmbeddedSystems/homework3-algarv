@@ -7,6 +7,9 @@ from arm_move.srv import restart, step, stepResponse
 
 class TestCase(unittest.TestCase):
     def __init__(self,*args):
+        '''
+        Initializes the services and calls restart.
+        '''
         super(TestCase,self).__init__(*args)
         rospy.wait_for_service('/px100/restart')
         rospy.wait_for_service('/px100/step')
@@ -16,10 +19,16 @@ class TestCase(unittest.TestCase):
         self.restart.call(clear_waypoints=False, box_x=0.15, box_y=0.0, box_z=0.025)
     
     def test_ground_collision(self):
+        '''
+        Tests if a step call for a trajectory that would send the robot into the ground returns a failure error code.
+        '''
         error_code = self.step.call(x=0.11175, y=0.0, z=-0.1, rx=0.0, ry=0.53735, rz=0.0, rw=0.84336)
         self.assertEquals(error_code, stepResponse(-1))
 
     def test_successful_plan(self):
+        '''
+        Tests if a step call for a trajectory that is known to be succesful will return a success error code. 
+        '''
         error_code = self.step.call(x=.25, y=0.0, z=0.2, rx=0.0, ry=0.0, rz=0.0, rw=1.0)
         self.assertEquals(error_code, stepResponse(1))
 

@@ -2,7 +2,7 @@
 <package format="2">
   <name>diff_drive</name>
   <version>0.0.0</version>
-  <description>The diff_drive package</description>
+  <description> The diff_drive package spawns a differential drive bot that will drive forwards and flip over itself in a gazebo world. </description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
